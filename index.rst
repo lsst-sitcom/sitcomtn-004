@@ -170,9 +170,11 @@ The software engineering user interfaces (EUIs) need to enable the users to togg
 The thermal compensations are often hard to determine with good accuracy, especially for the mirrors.
 This functionality will enable the users to easily determine whether the thermal LUTs are helping with the performance or not.
 
-For now, the thermal LUTs only use the bulk temperature as the input variable. There is no plan to utilize the thermal gradients.
+For now, the thermal LUTs only use the bulk temperature as the input variable. There is no plan to utilize the thermal gradients.\ [#label2]_
 The functional form of the thermal compensations will be the 5th order standard polynomials, to comply with
 LTS-88 :cite:`LTS-88` and LTS-206 :cite:`LTS-206`). All the thermal coefficients are set to zeros before we have good measurements of the thermal commpensations.
+
+.. [#label2] The only exception is that for M2, Harris already implemented thermal compensations due to the x, y, and radial gradients. We should keep those, and implement a switch to be able to toggle it on and off easily.
 
 #############
 Azimuth angle
@@ -229,7 +231,7 @@ Things we need to do before the next round of testing:
 - determine M2 actuator weight component and compare against Harris results;
 - perform analysis to determine if M2 static forces from Harris make sense;
 - change M2 gravity functional form to 5th order polynomial;
-- remove Harris M2 LUT dependence on thermal gradients;
+- add Harris M2 LUT dependence on thermal gradients, together with a switch;
 - all thermal components in the form of 5th order polynomial;
 - check and ensure that we use the following everywhere in the XML
 

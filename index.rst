@@ -139,7 +139,7 @@ Other functional form for the gravity component which we also considered include
 In choosing which functional form to use, our main considerations are:
 
 #. Consistency between the LUTs. If the needs of each component is drastically different, it is OK to use different functional forms for them. However, unless there are good reasons for doing so, we prefer to keep the functional form consistent between the LUTs. This will make future work for fine-tuning the LUTs using real measurements and updating the LUTs much more straightforward and less error-prone.
-#. Simplicity. There may be many functional forms that can meet our accuracy requirements. Here the criteria is to make sure the error due to finite number of coefficients is much less than the non-repeating error of the corresponding degree of freedom (DOF). Document-36395 :cite:`Document-36395` shows an analysis that demostrates that the 5th order standard polynomials are accurate enough in all cases. And it is the simplest form among the above.
+#. Simplicity. There may be many functional forms that can meet our accuracy requirements. Here the criteria is to make sure the error due to finite number of coefficients is much less than the non-repeating error of the corresponding degree of freedom (DOF). Document-36395 :cite:`Document-36395` shows an analysis that demonstrates that the 5th order standard polynomials are accurate enough in all cases. And it is the simplest form among the above.
 #. Various requirement documents (for example, LTS-88 :cite:`LTS-88` and LTS-206 :cite:`LTS-206`) specify that 5th order standard polynomials be used. We do not want to go through the change request process unless it is necessary.
 
 ##########################
@@ -158,9 +158,16 @@ The M2 and the camera hexapods do not have actuator weight components in their L
 Static components
 #################
 
-The static component of the LUT doesn't vary with external conditions. For the mirrors, these are the forces that are needed to bend out the low spatiall frequency factory figuring error. These were supplied by the vendors during factory acceptance testings. We will not change these components during commissioning and operations, unless somehow it can be proven that the figuring errors are different from what were determined at the factories.
+The static component of the LUT doesn't vary with external conditions. For the mirrors, these are the forces that are needed to bend out the low spatial frequency factory figuring error. These were supplied by the vendors during factory acceptance testings. We will not change these components during commissioning and operations, unless somehow it can be proven that the figuring errors are different from what were determined at the factories.
 
 As for the hexapods, the :math:`C_0` defined in Sec. :ref:`sec-p5` is the static component. For now, all six coefficients for the 5th order standard polynomial for each hexapod have been determined using results from FEA analyses. Once we have the hexapods mounted on the telescope mount assembly (TMA), we will use Laser Trackers (LTs) to calibrate the LUTs for both hexapods. It is expected that the calibrated values of :math:`C_0` will be quite different from the FEA values, because they depend on the actual installations of the hexapods on the TMA.
+
+The static components, especially those for the hexapods, are temperature dependent. We define :math:`C_0` at a reference temperature (:math:`T_{\rm ref}`), and require
+
+.. math::
+  T_{\rm ref} = 21 C
+
+for all the LUTs.
 
 ##################
 Thermal components
@@ -255,7 +262,7 @@ Appendix A - Useful links
 M1M3
 ####
 
-gravity:
+Gravity:
 
 - https://github.com/lsst-ts/ts_m1m3support/blob/master/SettingFiles/Tables/ElevationXTable.csv
 - https://github.com/lsst-ts/ts_m1m3support/blob/master/SettingFiles/Tables/ElevationYTable.csv
@@ -273,7 +280,7 @@ Thermal (place holder for now):
 - https://github.com/lsst-ts/ts_m1m3support/blob/master/SettingFiles/Tables/ThermalYTable.csv
 - https://github.com/lsst-ts/ts_m1m3support/blob/master/SettingFiles/Tables/ThermalZTable.csv
 
-static:
+Static:
 
 - https://github.com/lsst-ts/ts_m1m3support/blob/master/SettingFiles/Tables/StaticXTable.csv
 - https://github.com/lsst-ts/ts_m1m3support/blob/master/SettingFiles/Tables/StaticYTable.csv

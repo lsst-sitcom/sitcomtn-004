@@ -75,10 +75,17 @@ Each subsystem LUT has various components, depending on the input variables,
 
 - Elevation
 - Static component
-- Actuator weight
+- Actuator internal weight
 - Temperature (bulk, gradients)
 - Azimuth
 - Camera rotator angle
+
+The primary input variable to all the LUTs is the elevation angle. The only exception is the z-axis displacement of the hexapods which is also significantly affected by bulk temperature changes.
+
+*The elevation components of the M1M3 and M2 LUTs are required for safe operation of the optical systems. They are the only components that should not have a disabling switch.*
+All other LUT components need to have switchs to allow users to turn them off when needed. For example, the thermal LUTs are often hard to determine with good accuracy, especially for the mirrors. This functionality will enable the users to easily determine whether the thermal LUTs are helping with the performance or not.
+
+*The toggle switches for the LUT components must be implemented in both the engineering user interfaces (EUIs) and as Software Abstraction Layer (SAL) commands.*
 
 .. .. note::
 ..    Here we are only concerned with the LUTs that are used during exposures. The M1M3 dynamic forces during a slew are functions of the elevation angle and the angular velocities and accelerations. Sometimes they are referred to as the dynamic LUT (see for example, page 9 of LTS-88 :cite:`LTS-88`. That is not covered in this note since it only affects the image quality indirectly (if the system doesn’t settle completely before exposure starts).
@@ -144,17 +151,17 @@ In choosing which functional form to use, our main considerations are:
 
 .. [#label3] The M2 requirement document LTS-146 :cite:`LTS-146` did not specify the functional form of the gravity component of the LUT.
 
-##########################
-Actuator weight components
-##########################
+###################################
+Actuator internal weight components
+###################################
 
-For M1M3 and M2, the actuators have to supply the forces that can support their own weights first. Additional forces are then used to support and shape the glass. *The LUTs therefore have actuator weight components.* These forces can be calculated analytically, although they might not be as straightforward as one might first expect.
+For M1M3 and M2, the actuators have to supply the forces that can support their own internal weights first. Additional forces are then used to support and shape the glass. *The LUTs therefore have actuator internal weight components.* These forces can be calculated analytically. As a result of its two internal pneumatic cylinders angled at 45 degrees, the effects of the internal weight of the M1M3 actuators are more complex than would be expected.
 
-The calculations for M1M3 actuators (both single-axis and dual-axis actuators) are given in Document-32192 :cite:`Document-32192`. Measurements were also performed for standalone M1M3 actuators on the test bench in Tucson :cite:`Document-34907`. The results were consistent with the analytical calculations within measurement errors. We therefore use the results from the calculations in the final actuator weight component of the M1M3 LUT.
+The calculations for M1M3 actuators (both single-axis and dual-axis actuators) are given in Document-32192 :cite:`Document-32192`. Measurements were also performed for standalone M1M3 actuators on the test bench in Tucson :cite:`Document-34907`. The results were consistent with the analytical calculations within measurement errors. We therefore use the results from the calculations in the final actuator internal weight component of the M1M3 LUT.
 
-The M2 LUT actuator weight component was supplied by the M2 vendor Harris. The Rubin team plans to recalculate these forces to crosscheck the Harris results.
+The M2 LUT actuator internal weight component was supplied by the M2 vendor Harris. The Rubin team plans to recalculate these forces to crosscheck the Harris results. We will also measure these when the mirror is removed. But note that the measurements will include the effects of the load cell zero offsets. Therefore the measurements will be used as a crosscheck. For the M2 LUT actuator internal weight component we will use results based on the engineering model.
 
-*The M2 and the camera hexapods do not have actuator weight components in their LUTs* because the output of the hexapod LUTs are positions instead of forces.
+*The M2 and the camera hexapods do not have actuator internal weight components in their LUTs* because the output of the hexapod LUTs are positions instead of forces.
 
 #################
 Static components
@@ -162,28 +169,28 @@ Static components
 
 The static component of the LUT doesn't vary with external conditions. *For the mirrors, these are the forces that are needed to bend out the low spatial frequency factory figuring error.* These were supplied by the vendors during factory acceptance testings. We will not change these components during commissioning and operations, unless somehow it can be proven that the figuring errors are different from what were determined at the factories.
 
-*As for the hexapods, the :math:`C_0` defined in Sec. :ref:`sec-p5` is the static component.* For now, all six coefficients for the 5th order standard polynomial for each hexapod have been determined using results from FEA analyses. Once we have the hexapods mounted on the telescope mount assembly (TMA), we will use Laser Trackers (LTs) to calibrate the LUTs for both hexapods. It is expected that the calibrated values of :math:`C_0` will be quite different from the FEA values, because they depend on the actual installations of the hexapods on the TMA.
+*As for the hexapods, the* :math:`C_0` *defined in Sec.* :ref:`sec-p5` *is the static component.* For now, all six coefficients for the 5th order standard polynomial for each hexapod have been determined using results from FEA analyses. Once we have the hexapods mounted on the telescope mount assembly (TMA), we will use Laser Trackers (LTs) to calibrate the LUTs for both hexapods. It is expected that the calibrated values of :math:`C_0` will be quite different from the FEA values. The :math:`C_0` represents the variation of the hexapod locations from the theoretically perfect TMA and optical system. This variation is primarily the result of fabrication and assembly tolerances.
 
-The static components, especially those for the hexapods, are temperature dependent. *We define* :math:`C_0` *at a reference temperature* (:math:`T_{\rm ref}`), *and require*
+The static components :math:`C_0`, especially those for the hexapods, are defined at a reference temperature (:math:`T_{\rm ref}`). *We use*
 
 .. math::
-  T_{\rm ref} = 21 C
+  T_{\rm ref} = 11.5 C
 
-*for all the LUTs.*
+*for all the LUTs.* Per LTS-54 :cite:`LTS-54` the operational temperature range is -3 to 19C, and the mean temperature is expected to be 11.5C.
 
 ##################
 Thermal components
 ##################
 
-*The software engineering user interfaces (EUIs) must enable the users to toggle the thermal components of the LUTs on and off.*
-The thermal compensations are often hard to determine with good accuracy, especially for the mirrors.
-This functionality will enable the users to easily determine whether the thermal LUTs are helping with the performance or not.
+.. *The software engineering user interfaces (EUIs) must enable the users to toggle the thermal components of the LUTs on and off.* The thermal compensations are often hard to determine with good accuracy, especially for the mirrors. This functionality will enable the users to easily determine whether the thermal LUTs are helping with the performance or not.
 
 *For now, the thermal LUTs only use the bulk temperature as the input variable.* There is no plan to utilize the thermal gradients.\ [#label2]_
 *The functional form of the thermal compensations will be the 5th order standard polynomials,* to comply with
 LTS-88 :cite:`LTS-88` and LTS-206 :cite:`LTS-206`). All the thermal coefficients are set to zeros before we have good measurements of the thermal commpensations.
 
 .. [#label2] The only exception is that for M2, Harris already implemented thermal compensations due to the x, y, and radial gradients. *We choose to keep those, and implement a switch to be able to toggle it on and off easily.*
+
+The degradation in image quality resulting from thermal variations will occur slowly relative to the cadence of the telescope and the AOS response. Consequently, the system will already compensate for this degradation.
 
 #############
 Azimuth angle
@@ -195,11 +202,28 @@ LTS-88 :cite:`LTS-88` and LTS-206 :cite:`LTS-206`.
 It is understood that a Fourier series will have the advantage of being continuous at 0/360 deg.
 However, it is expected that the azimuth corrections will be small and not worth the complexity.
 
+.. *The software EUIs must enable the users to toggle the Azimuth components of the LUTs on and off.*
+
 #############
 Rotator angle
 #############
 
-*Only the camera hexapod LUT has a rotator angle component.* This is due to the asymmetry in the camera mass distribution around the optical axis.
+*Only the camera hexapod LUT has a rotator angle component.* This is due to a small angle of tilt between the rotator’s rotational axis and the camera’s optical axis, and the asymmetry in the camera mass distribution around the optical axis.
+
+.. *The software EUIs must enable the users to toggle the rotator components of the LUTs on and off.*
+
+######################
+Load cell zero offsets
+######################
+
+*The M1M3 and M2 control systems need to have LUTs to account for the load cell zero offsets.*
+
+These can be configured individually for the x, y, and z-components of each actuator.
+Initially these are all set at zero. After we obtain the offset values through measurements, these tables will be populated.
+They represent an important contributor to the overall commanded forces.
+
+Like the static components, the load cell zero offsets are not dependent on any of the other variables discussed in this document.
+For conceptual clarity and easier maintanence, we choose to keep them separate from the static forces.
 
 ########################
 Units, DOF names, and CS
@@ -220,7 +244,7 @@ In the XML interface, we need to keep uniform naming to avoid confusions.
 The rotations around the x, y, and z axes have parameter names of rx, ry, and rz.*
 The parameter names having "d" and "r" in them indiciate that these are offset commands, not the new positions for the commanded components.
 For clarity, these are required even when the topic name already indicates it is an offset command, since they are not much longer than x, y, z, u, v, and w.
-*The offsets are always in M2 CS :cite:`SITCOMTN-003` for the M2 hexapod, and CCS :cite:`SITCOMTN-003` for the camera hexapod.*
+*The offsets are always in M2 CS* :cite:`SITCOMTN-003` *for the M2 hexapod, and CCS* :cite:`SITCOMTN-003` *for the camera hexapod.*
 
 We realize that the parameter names for mirror positions are not as consistent as one may wish.
 Right now the M1M3 positions use units of meters and degrees, while M2 positions uses microns and arcseconds.
@@ -229,19 +253,25 @@ For M2 they are x, y, z, xRot, yRot, and zRot.
 Since these are only used in engineering modes, and not controlled by the AOS, they are less likely to cause confusions.
 To reduce the amount of work for the developers we choose not to change these.
 
+Note that for the hexapods, rz, the rotation about the optical axis, does not affect the optical system and is not used by the AOS system. It is only used for engineering/diagnostic purposes.
+
 ###########
 Future work
 ###########
 
 Things we need to do before the next round of testing:
 
-- finish up FEA analysis on M1M3 gravity LUT, and make sure we account for the weights of all the interface plates and cups correctly; also revise Document-34898 :cite:`Document-34898` accordingly;
-- perform FEA analysis on M2 gravity LUT;
-- determine M2 actuator weight component and compare against Harris results;
+- finish FEA analysis on M1M3 gravity LUT, and make sure we account for the weights of all the interface plates and cups correctly; also revise Document-34898 :cite:`Document-34898` accordingly;
+- measure the M1M3 actuator load cell zero offsets before they are attached to the glass mirror on the summit;
+- perform FEA analysis on M2 gravity LUT to verify Harris values;
+- determine M2 actuator internal weight component and compare against Harris results;
+- measure the M2 actuator load cell zero offsets when the mirror is removed;
 - perform analysis to determine if M2 static forces from Harris make sense;
 - change M2 gravity functional form to 5th order polynomial;
-- add Harris M2 LUT dependence on thermal gradients, together with a switch;
-- all thermal components in the form of 5th order polynomial;
+- add Harris M2 LUT dependence on thermal gradients;
+- change the M2 thermal LUT reference temperature from 21C to 11.5C;
+- Provide software switches to disable separate LUT components;
+- change all thermal components in the form of 5th order polynomial;
 - check and ensure that we use the following everywhere in the XML
 
   - elevation angle instead of zenith angle (also revise SITCOMTN-003 :cite:`SITCOMTN-003` accordingly);
@@ -251,8 +281,8 @@ Things we need to do before the next round of testing:
 Future milestones for LUT updates:
 
 - M3 summit testing;
-- LT testing of the M2 and camera hexapods on the TMA;
-- Initial Optical Testing Assembly (IOTA) (if we eventually do get a time winidow);
+- • Updates of the M2 and camera hexapods LUTs using laser tracker measurements on the TMA;
+- Initial Optical Testing Assembly (IOTA) (if we eventually do get a time window);
 - Commissioning Camera (ComCam);
 - LSSTCam Full-Array Mode (FAM);
 - LSSTCam normal operation mode (using four corner wavefront sensors).

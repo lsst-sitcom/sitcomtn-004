@@ -13,11 +13,14 @@ serial_number: "004"
 doc_id: "SITCOMTN-004"
 
 # Title of the document, without the series/serial designation
-doc_title: "Implementation of the Rubin AOS LUTs"
+doc_title: "Standardizing the Implementation of the Rubin AOS LUTs"
 
 # Author names, ordered as a list. Each author name should be formatted as 'First Last'
 authors:
   - "Bo Xin"
+  - "Doug Neill"
+  - "Sandrine Thomas"
+  - "Chuck Claver"
 
 # Current document revision date, YYYY-MM-DD
 # Only set this field if you need to manually fix the revision date;
@@ -37,7 +40,7 @@ authors:
 copyright: "2020, Association of Universities for Research in Astronomy, Inc. (AURA)"
 
 # Description. A short, 1-2 sentence statemement used by document indices.
-description: "This tech note describes the implementation of the various Look-Up Tables (LUTs) for the Rubin Observatory Active Optics System (AOS). The subsystems involved are the M1M3, M2, the M2 hexapod, and the camera hexapod. This note is meant to be a guide for the subsystem software developers, and for the scientists who are updating the LUTs, both during commissioning and operations. "
+description: "This tech note describes the implementation of the various Look-Up Tables (LUTs) for the Rubin Observatory Active Optics System (AOS). The subsystems involved are the M1M3, M2, the M2 hexapod, and the camera hexapod. This note is meant to be an instruction manual for the subsystem software developers, and for the scientists who are updating the LUTs, both during commissioning and operations. "
 
 # Abstract, if available
 # abstract: >

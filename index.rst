@@ -46,8 +46,6 @@
 
 .. note::
 
-   **This technote is not yet published.**
-
    This tech note describes the implementation of the various Look-Up Tables (LUTs) for the Rubin Observatory Active Optics System (AOS). The subsystems involved are the M1M3, M2, the M2 hexapod, and the camera hexapod. Our objective is to make the various LUTs as consistent as possible in terms of functional forms, units, coordinate systems (CS), etc., because confusions over these later will be very costly.
 
    This note is meant to be an instruction manual for the subsystem software developers, and for the scientists and engineers who will be tuning up the AOS and updating the LUTs, both during commissioning and operations. The key conclusions are highlighted with *italic* throughout.
@@ -120,6 +118,9 @@ The gravity components of the LUTs have different elevation ranges,
 - [-270, 90] deg for M2. In normal operations, M2 elevation will never go beyond the [0, 90] deg range. But M2 has a cart. For testing and engineering purposes, it needs to be able to be rotated by 360 deg. Beyond the [0, 90] deg range, glass safety is still the concern, but not image quality.
 - [0, 90] deg for the M2 and camera hexapods. The hexapods may go out of the [0, 90] deg range. But we won't be imaging outside of that range. Unlike the mirrors, where outside of [0, 90] deg proper LUT forces are still needed to counter gravity, for hexapods, we do not have to compensate position offset due to gravity. If the elevation angle goes smaller than 0 deg, we will use LUT values for 0 deg. If it goes larger than 90 deg we will use LUT values for 90 deg.
 
+The M1M3 and M2 use their onboard inclinometers to determine the elevation angle.
+If due to some reason the elevation angle is not available from the onboard instruments, the LUTs use the elevation angle from the TMA telemetry.
+There are no inclinometers on the hexapods. The hexapods can only get the elevation angle by subscribing to the TMA telemetry.
 
 .. _sec-p5:
 
@@ -281,7 +282,7 @@ Things we need to do before the next round of testing:
 Future milestones for LUT updates:
 
 - M3 summit testing;
-- • Updates of the M2 and camera hexapods LUTs using laser tracker measurements on the TMA;
+- Updates of the M2 and camera hexapods LUTs using laser tracker measurements on the TMA;
 - Initial Optical Testing Assembly (IOTA) (if we eventually do get a time window);
 - Commissioning Camera (ComCam);
 - LSSTCam Full-Array Mode (FAM);
